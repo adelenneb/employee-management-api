@@ -1,3 +1,6 @@
+
+![CI](https://github.com/adelenneb/employee-management-api/actions/workflows/ci.yml/badge.svg)
+
 # Employee Management API
 
 Enterprise-grade REST API built with **Java 21**, **Spring Boot**, **Spring Security (JWT)** and **MySQL**, fully containerized using **Docker** and **Docker Compose**.
