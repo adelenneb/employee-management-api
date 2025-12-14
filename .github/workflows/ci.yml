@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    name: Test and Build Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      JAVA_VERSION: "21"
+      SPRING_PROFILES_ACTIVE: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Temurin JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          cache-dependency-path: |
+            pom.xml
+            **/pom.xml
+
+      - name: Ensure Maven wrapper is executable
+        run: chmod +x mvnw
+
+      - name: Run tests (H2 profile)
+        run: ./mvnw -B -ntp test
+
+      - name: Build Docker image (no push)
+        run: docker build -t employee-management-api:ci .
